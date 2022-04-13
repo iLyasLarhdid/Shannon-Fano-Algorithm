@@ -1,0 +1,1 @@
+hello my name is ilyas larhdid and this is a test of my compression algorithm, the file has 101 bytes

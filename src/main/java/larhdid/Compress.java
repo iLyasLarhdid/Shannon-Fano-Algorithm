@@ -7,30 +7,31 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MyAppV2TxtFiles {
-
-
-    public static String convertStringToBinary(String input) {
-
-        StringBuilder result = new StringBuilder();
-        char[] chars = input.toCharArray();
-        for (char aChar : chars) {
-            result.append(
-                    String.format("%8s", Integer.toBinaryString(aChar))   // char -> int, auto-cast
-                            .replaceAll(" ", "0")                         // zero pads
-            );
-        }
-        return result.toString();
-
-    }
+public class Compress {
 
     public static void main(String[] args) throws IOException {
 
-        //todo : instead of saving bits in String we should use java.util.BitSet
-        File myObj = new File(Paths.get("src/main/java/larhdid").toAbsolutePath().toString()+"/myText.txt");
+        String filePath = "/myText.txt";
+        boolean shouldCreateFile = true;
+        if(args.length>0){
+            filePath=args[0];
+            shouldCreateFile = false;
+        }
+
+        File myObj = new File(Paths.get("").toAbsolutePath().toString()+filePath);
+        if (shouldCreateFile) {
+            myObj.createNewFile();
+            FileWriter writer = new FileWriter(myObj);
+            Scanner s = new Scanner(System.in);
+            writer.write(s.nextLine());
+            writer.close();
+        }
+
         Map<String, Double> charOldAscii = new TreeMap<>();
         Map<Integer, Double> charOldAsciiTempSolution = new TreeMap<>();
         Map<String, Integer> dictAscii = new TreeMap<>();
+        Map<String, String> dictJson = new TreeMap<>();
+        //JSONObject dictJson = new JSONObject();
         String text="";
         String newText = "";
         Scanner myReader = new Scanner(myObj);
@@ -39,7 +40,7 @@ public class MyAppV2TxtFiles {
             text+=data;
         }
         myReader.close();
-        InputStream inputStream = new FileInputStream(Paths.get("src/main/java/larhdid").toAbsolutePath().toString()+"/myText.txt");
+        InputStream inputStream = new FileInputStream(Paths.get("").toAbsolutePath().toString()+"/myText.txt");
         System.out.println("input stream "+inputStream.read());
         MyCompressionV4Finished v4 = new MyCompressionV4Finished();
 
@@ -63,7 +64,9 @@ public class MyAppV2TxtFiles {
         for(int i = 0; i< text.length();i++){
             newText += v4.charNewAscii.get(dictAscii.get(String.valueOf(text.charAt(i))));
         }
-
+        dictAscii.forEach((key,value)->{
+            dictJson.put(key,v4.charNewAscii.get(value));
+        });
         System.out.println("new file text : ("+newText+") length : "+newText.length());
         // You can use Integer.parseInt with a radix of 2 (binary) to convert the binary string to an integer:
         // add (8-bits.length()%32) zeros to the end if the length of our bits%32 > 0
@@ -77,8 +80,8 @@ public class MyAppV2TxtFiles {
 //        System.out.println(Character.MAX_RADIX);
         String test = "";
         String newText2 = newText;
-        if(newText.length()%32>0){
-            for (int i = 0 ; i<(32-newText.length()%32); i++){
+        if(newText.length()%16>0){
+            for (int i = 0 ; i<(16-newText.length()%16); i++){
                 newText2+="0";
             }
         }
@@ -91,18 +94,27 @@ public class MyAppV2TxtFiles {
 //        // Then if you want the corresponding character as a string:
 //        System.out.println(Character.toString((char) charCode2));
         System.out.println(newText2);
-        for(int i = 0 ; i<newText2.length();i += 32){//each character is 32bits
+        for(int i = 0 ; i<newText2.length();i += 16){//each character is 32bits
             //int charCode = Integer.parseInt(newText.substring(i,i+32), 2);
-            int charCode = Integer.parseUnsignedInt(newText2.substring(i,i+32), 2);
+            int charCode = Integer.parseUnsignedInt(newText2.substring(i,i+16), 2);
             // Then if you want the corresponding character as a string:
             test+= Character.toString((char) charCode);
         }
-        System.out.println("test : "+test);
-        FileWriter newFile = new FileWriter(Paths.get("src/main/java/larhdid").toAbsolutePath().toString()+"/myResult.txt");
+        System.out.println("test : "+test+"\nDictJson : "+dictJson.toString());
+        FileWriter newFile = new FileWriter(Paths.get("").toAbsolutePath().toString()+"/compressed.txt");
         newFile.write(test);
         newFile.close();
-        /*System.out.println(convertStringToBinary(text));
-        Arrays.stream("0110100101101100011110010110000101110011".split("(?<=\\G.{8})")).forEach(s1 -> System.out.print((char) Integer.parseInt(s1, 2)));
-        System.out.print('\n');*/
+        FileWriter newFileDict = new FileWriter(Paths.get("").toAbsolutePath().toString()+"/dict.txt");
+        newFileDict.write(newText.length()+":number\n");
+        dictJson.forEach((key,value)->{
+            try {
+                newFileDict.append(key+":"+value+"\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        newFileDict.close();
+
+
     }
 }

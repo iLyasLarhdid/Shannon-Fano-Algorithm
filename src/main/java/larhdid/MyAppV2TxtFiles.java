@@ -1,9 +1,6 @@
 package larhdid;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Scanner;
@@ -78,12 +75,13 @@ public class MyAppV2TxtFiles {
         System.out.println(Arrays.toString(data));*/
 //        System.out.println(Character.MIN_RADIX);
 //        System.out.println(Character.MAX_RADIX);
+        String test = "";
+        String newText2 = newText;
         if(newText.length()%32>0){
             for (int i = 0 ; i<(32-newText.length()%32); i++){
-                newText+="0";
+                newText2+="0";
             }
         }
-//        String test = "";
         /*String fileName = "out.bin";
         FileOutputStream fileOs = new FileOutputStream(fileName);
         ObjectOutputStream os = new ObjectOutputStream(fileOs);
@@ -92,15 +90,17 @@ public class MyAppV2TxtFiles {
 //        int charCode2 = Integer.parseInt("-11000101010100101000110000010001", 2);
 //        // Then if you want the corresponding character as a string:
 //        System.out.println(Character.toString((char) charCode2));
-//        System.out.println("11000101010100101000110000010001".length());
-        /*for(int i = 0 ; i<newText.length();i += 32){//each character is 32bits
+        System.out.println(newText2);
+        for(int i = 0 ; i<newText2.length();i += 32){//each character is 32bits
             //int charCode = Integer.parseInt(newText.substring(i,i+32), 2);
-            byte charCode = Byte.parseByte(newText.substring(i,i+8), 2);
+            int charCode = Integer.parseUnsignedInt(newText2.substring(i,i+32), 2);
             // Then if you want the corresponding character as a string:
             test+= Character.toString((char) charCode);
         }
-        System.out.println(test);*/
-
+        System.out.println("test : "+test);
+        FileWriter newFile = new FileWriter(Paths.get("src/main/java/larhdid").toAbsolutePath().toString()+"/myResult.txt");
+        newFile.write(test);
+        newFile.close();
         /*System.out.println(convertStringToBinary(text));
         Arrays.stream("0110100101101100011110010110000101110011".split("(?<=\\G.{8})")).forEach(s1 -> System.out.print((char) Integer.parseInt(s1, 2)));
         System.out.print('\n');*/

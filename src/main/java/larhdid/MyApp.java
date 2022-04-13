@@ -12,6 +12,7 @@ public class MyApp {
         Map<Integer, Double> charOldAsciiTempSolution = new TreeMap<>();
         Map<String, Integer> dictAscii = new TreeMap<>();
         String text;
+        String newText="";
         MyCompressionV4Finished v4 = new MyCompressionV4Finished();
 
         System.out.println("Enter the text : ");
@@ -28,8 +29,16 @@ public class MyApp {
             charOldAsciiTempSolution.put(Integer.parseInt(String.valueOf(counter)),charOldAscii.get(key)/charOldAscii.size());
         });
 
+
+        System.out.println("Probabilities "+charOldAsciiTempSolution);
         System.out.println("Dictionary table"+dictAscii);
         v4.compress(charOldAsciiTempSolution);
         System.out.println(v4.toString());
+
+        for(int i = 0; i< text.length();i++){
+            newText += v4.charNewAscii.get(dictAscii.get(String.valueOf(text.charAt(i))));
+        }
+
+        System.out.println("new file text : ("+newText+") length : "+newText.length());
     }
 }

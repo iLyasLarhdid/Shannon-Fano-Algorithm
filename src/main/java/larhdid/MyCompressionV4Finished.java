@@ -65,9 +65,38 @@ public class MyCompressionV4Finished {
 
     @Override
     public String toString() {
-        return "MYCompressionV2{" +
+        return "MYCompressionV4{" +
                 "charNewAscii=" + charNewAscii +
                 '}';
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // convert the result+dictionary into binary and send it to over the network https://stackoverflow.com/questions/4211705/binary-to-text-in-java
+    // get the data and decode it back to the text
 }

@@ -65,7 +65,7 @@ public class Decompress {
                 if(dictMap.containsKey(sub)){
                     finalText+=dictMap.get(sub);
                     jHolder = j;
-                    j = i+longestValue;
+                    j = i+longestValue+1;
                 }
             }
             i=jHolder;

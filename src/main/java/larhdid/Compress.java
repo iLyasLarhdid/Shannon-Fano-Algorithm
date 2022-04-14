@@ -11,16 +11,17 @@ public class Compress {
 
     public static void main(String[] args) throws IOException {
 
-        String filePath = "/myText.txt";
+        String filePath = Paths.get("").toAbsolutePath().toString()+"/myText.txt";
         boolean shouldCreateFile = true;
         if(args.length>0){
             filePath=args[0];
             shouldCreateFile = false;
         }
 
-        File myObj = new File(Paths.get("").toAbsolutePath().toString()+filePath);
-        if (shouldCreateFile) {
+        File myObj = new File(filePath);
+        if (!myObj.isFile() && !myObj.canWrite() && shouldCreateFile) {
             myObj.createNewFile();
+            System.out.println("Enter text : ");
             FileWriter writer = new FileWriter(myObj);
             Scanner s = new Scanner(System.in);
             writer.write(s.nextLine());
@@ -31,7 +32,6 @@ public class Compress {
         Map<Integer, Double> charOldAsciiTempSolution = new TreeMap<>();
         Map<String, Integer> dictAscii = new TreeMap<>();
         Map<String, String> dictJson = new TreeMap<>();
-        //JSONObject dictJson = new JSONObject();
         String text="";
         String newText = "";
         Scanner myReader = new Scanner(myObj);
@@ -40,7 +40,7 @@ public class Compress {
             text+=data;
         }
         myReader.close();
-        InputStream inputStream = new FileInputStream(Paths.get("").toAbsolutePath().toString()+"/myText.txt");
+        InputStream inputStream = new FileInputStream(filePath);
         System.out.println("input stream "+inputStream.read());
         MyCompressionV4Finished v4 = new MyCompressionV4Finished();
 
@@ -57,9 +57,9 @@ public class Compress {
         });
 
         System.out.println("Probabilities "+charOldAsciiTempSolution);
-        System.out.println("Dictionary table"+dictAscii);
+//        System.out.println("Dictionary table"+dictAscii);
         v4.compress(charOldAsciiTempSolution);
-        System.out.println(v4.toString());
+//        System.out.println(v4.toString());
 
         for(int i = 0; i< text.length();i++){
             newText += v4.charNewAscii.get(dictAscii.get(String.valueOf(text.charAt(i))));
@@ -67,7 +67,7 @@ public class Compress {
         dictAscii.forEach((key,value)->{
             dictJson.put(key,v4.charNewAscii.get(value));
         });
-        System.out.println("new file text : ("+newText+") length : "+newText.length());
+//        System.out.println("new file text : ("+newText+") length : "+newText.length());
         // You can use Integer.parseInt with a radix of 2 (binary) to convert the binary string to an integer:
         // add (8-bits.length()%32) zeros to the end if the length of our bits%32 > 0
         // in our dictionary we should have the number of zeros we have added at the end of our string so that we can delete them
@@ -93,14 +93,14 @@ public class Compress {
 //        int charCode2 = Integer.parseInt("-11000101010100101000110000010001", 2);
 //        // Then if you want the corresponding character as a string:
 //        System.out.println(Character.toString((char) charCode2));
-        System.out.println(newText2);
+        System.out.println("compressed data : "+newText2);
         for(int i = 0 ; i<newText2.length();i += 16){//each character is 32bits
             //int charCode = Integer.parseInt(newText.substring(i,i+32), 2);
             int charCode = Integer.parseUnsignedInt(newText2.substring(i,i+16), 2);
             // Then if you want the corresponding character as a string:
             test+= Character.toString((char) charCode);
         }
-        System.out.println("test : "+test+"\nDictJson : "+dictJson.toString());
+//        System.out.println("test : "+test+"\nDictJson : "+dictJson.toString());
         FileWriter newFile = new FileWriter(Paths.get("").toAbsolutePath().toString()+"/compressed.txt");
         newFile.write(test);
         newFile.close();
@@ -109,6 +109,7 @@ public class Compress {
         dictJson.forEach((key,value)->{
             try {
                 newFileDict.append(key+":"+value+"\n");
+                System.out.println(key+":"+value);
             } catch (IOException e) {
                 e.printStackTrace();
             }

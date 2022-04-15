@@ -67,21 +67,10 @@ public class Compress {
         dictAscii.forEach((key,value)->{
             dictJson.put(key,v4.charNewAscii.get(value));
         });
-//        System.out.println("new file text : ("+newText+") length : "+newText.length());
-        // You can use Integer.parseInt with a radix of 2 (binary) to convert the binary string to an integer:
-        // add (8-bits.length()%32) zeros to the end if the length of our bits%32 > 0
-        // in our dictionary we should have the number of zeros we have added at the end of our string so that we can delete them
-        // this is a temporary solution but we are going to fix it some how because we always know the last element ends with one ...
-        // if we have zero at the end we trace it back to its last occurrence and we delete them
-        // this is a better approach as we dont have to send number of zeros in the dictionary
-        /*byte[] data = text.substring(0,101).getBytes(StandardCharsets.UTF_8);
-        System.out.println(Arrays.toString(data));*/
-//        System.out.println(Character.MIN_RADIX);
-//        System.out.println(Character.MAX_RADIX);
         String test = "";
         String newText2 = newText;
-        if(newText.length()%16>0){
-            for (int i = 0 ; i<(16-newText.length()%16); i++){
+        if(newText.length()%MyCompressionV4Finished.numberPOfBits>0){
+            for (int i = 0 ; i<(MyCompressionV4Finished.numberPOfBits-newText.length()%MyCompressionV4Finished.numberPOfBits); i++){
                 newText2+="0";
             }
         }
@@ -93,19 +82,19 @@ public class Compress {
 //        int charCode2 = Integer.parseInt("-11000101010100101000110000010001", 2);
 //        // Then if you want the corresponding character as a string:
 //        System.out.println(Character.toString((char) charCode2));
-        System.out.println("compressed data : "+newText2);
-        for(int i = 0 ; i<newText2.length();i += 16){//each character is 32bits
-            //int charCode = Integer.parseInt(newText.substring(i,i+32), 2);
-            int charCode = Integer.parseUnsignedInt(newText2.substring(i,i+16), 2);
+        System.out.println("compressed data : "+newText);
+        for(int i = 0 ; i<newText2.length();i += MyCompressionV4Finished.numberPOfBits){//each character is 10bits
+            //int charCode = Integer.parseInt(newText.substring(i,i+10), 2);
+            int charCode = Integer.parseUnsignedInt(newText2.substring(i,i+MyCompressionV4Finished.numberPOfBits), 2);
             // Then if you want the corresponding character as a string:
             test+= Character.toString((char) charCode);
         }
-//        System.out.println("test : "+test+"\nDictJson : "+dictJson.toString());
+
         FileWriter newFile = new FileWriter(Paths.get("").toAbsolutePath().toString()+"/compressed.txt");
         newFile.write(test);
         newFile.close();
         FileWriter newFileDict = new FileWriter(Paths.get("").toAbsolutePath().toString()+"/dict.txt");
-        newFileDict.write(newText.length()+":number\n");
+        newFileDict.write(newText.length()+":n\n");
         dictJson.forEach((key,value)->{
             try {
                 newFileDict.append(key+":"+value+"\n");

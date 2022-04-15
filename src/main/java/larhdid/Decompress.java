@@ -24,7 +24,7 @@ public class Decompress {
         char[] chars = input.toCharArray();
         for (char aChar : chars) {
             result.append(
-                    String.format("%16s", Integer.toBinaryString(aChar))   // char -> int, auto-cast
+                    String.format("%"+MyCompressionV4Finished.numberPOfBits+"s", Integer.toBinaryString(aChar))   // char -> int, auto-cast
                             .replaceAll(" ", "0")                         // zero pads
             );
         }
@@ -58,7 +58,7 @@ public class Decompress {
         longestValue = longestValueInMap(dictMap);
         System.out.println(longestValue);
         int i = 0;
-        while(i<Integer.parseInt(dictMap.get("number"))){
+        while(i<Integer.parseInt(dictMap.get("n"))){
             int jHolder = 0;
             for(int j = i+1; j<=i+longestValue ; j++){
                 String sub = encodedBits.substring(i,j);

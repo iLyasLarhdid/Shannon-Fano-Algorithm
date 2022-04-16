@@ -4,11 +4,11 @@ Shannon Fano Algorithm is an entropy encoding technique for lossless data compre
 
 ## Usage
 
-![first step](https://github.com/iLyasLarhdid/Shannon-Fano-Algorithm/blob/master/01.png?raw=true)
+![first step](https://github.com/iLyasLarhdid/Shannon-Fano-Algorithm/blob/master/src/main/resources/imgs/01.JPG?raw=true)
 
-![first step](https://github.com/iLyasLarhdid/Shannon-Fano-Algorithm/blob/master/01.png?raw=true)
+![first step](https://github.com/iLyasLarhdid/Shannon-Fano-Algorithm/blob/master/src/main/resources/imgs/02.JPG?raw=true)
 
-![first step](https://github.com/iLyasLarhdid/Shannon-Fano-Algorithm/blob/master/01.png?raw=true)
+![first step](https://github.com/iLyasLarhdid/Shannon-Fano-Algorithm/blob/master/src/main/resources/imgs/03.JPG?raw=true)
 
 
 ## Contributing

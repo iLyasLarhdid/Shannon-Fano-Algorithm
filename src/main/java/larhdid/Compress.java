@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class Compress {
@@ -51,8 +52,8 @@ public class Compress {
             text+=data;
         }
         myReader.close();
-        InputStream inputStream = new FileInputStream(filePath);
-        System.out.println("input stream "+inputStream.read());
+//        InputStream inputStream = new FileInputStream(filePath);
+//        System.out.println("input stream "+inputStream.read());
         MyCompressionV4Finished v4 = new MyCompressionV4Finished();
         for(int i = 0; i<text.length(); i++){
             String key = String.valueOf(text.charAt(i));
@@ -100,6 +101,13 @@ public class Compress {
 //        // Then if you want the corresponding character as a string:
 //        System.out.println(Character.toString((char) charCode2));
         System.out.println("compressed data : "+newText);
+        /*Double L = Double.valueOf(newText.length())/text.length();
+        System.out.println("average code length (L=bit/symbol) : "+L);*/
+        AtomicReference<Double> L = new AtomicReference<>((double) 0);
+        dictJson.forEach((key,value)->{
+            L.updateAndGet(v -> v + value.length());
+        });
+        System.out.println("average code length (bit/symbol) : "+(L.get()/dictJson.size()));
         for(int i = 0 ; i<newText2.length();i += bitNumber){//each character is 10bits
             //int charCode = Integer.parseInt(newText.substring(i,i+10), 2);
             int charCode = Integer.parseUnsignedInt(newText2.substring(i,i+bitNumber), 2);

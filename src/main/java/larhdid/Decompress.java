@@ -1,6 +1,7 @@
 package larhdid;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -10,21 +11,27 @@ import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Decompress {
+    //number of bits used to encode
+    private static int getNumberOfBits() throws FileNotFoundException {
+        File bitsFile = new File(Paths.get("").toAbsolutePath().toString()+"/bits.txt");
+        return Integer.parseInt(new Scanner(bitsFile).nextLine());
+    }
+
     public static int longestValueInMap(Map<String,String> dictMap){
         AtomicInteger a = new AtomicInteger();
         dictMap.forEach((key,value)->{
-            if(!key.equals("number") && key.length()> a.get())
+            if(!key.equals("n") && key.length()> a.get())
                 a.set(key.length());
         });
         return a.get();
     }
-    public static String convertStringToBinary(String input) {
+    public static String convertStringToBinary(String input) throws FileNotFoundException {
 
         StringBuilder result = new StringBuilder();
         char[] chars = input.toCharArray();
         for (char aChar : chars) {
             result.append(
-                    String.format("%"+MyCompressionV4Finished.numberPOfBits+"s", Integer.toBinaryString(aChar))   // char -> int, auto-cast
+                    String.format("%"+getNumberOfBits()+"s", Integer.toBinaryString(aChar))   // char -> int, auto-cast
                             .replaceAll(" ", "0")                         // zero pads
             );
         }
@@ -37,6 +44,7 @@ public class Decompress {
         String decodedText = "";
         String finalText = "";
         Map<String,String> dictMap = new HashMap<>();
+
         //the reverse process
         File encodedFile = new File(Paths.get("").toAbsolutePath().toString()+"/compressed.txt");
         Scanner encodedReader = new Scanner(encodedFile);
@@ -46,9 +54,12 @@ public class Decompress {
         // decoding process
         File decodedFile = new File(Paths.get("").toAbsolutePath().toString()+"/dict.txt");
         Scanner decodedReader = new Scanner(decodedFile);
+        //get the number of characters in the coded String
+        decodedText = decodedReader.nextLine();
+        dictMap.put(decodedText.substring(decodedText.length()-1),decodedText.substring(0,decodedText.length()-1));
         while (decodedReader.hasNextLine()) {
             decodedText = decodedReader.nextLine();
-            dictMap.put(decodedText.split("[:]")[1],decodedText.split("[:]")[0]);
+            dictMap.put(decodedText.substring(1),decodedText.substring(0,1));
         }
         System.out.println(encodedText+"\n---------\n"+dictMap);
 

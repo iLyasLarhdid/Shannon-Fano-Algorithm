@@ -7,7 +7,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MyCompressionV4Finished {
     Map<Integer, String> charNewAscii = new TreeMap<>();//map to store the new ascii code for the characters
-    public static int numberPOfBits = 10;
+    public static int numberPOfBits = 16;
+
+
+
     public void compress(Map<Integer, Double> charOldAscii){
         List<Double> tab_results = new ArrayList<>();//results of each iteration ( the subtraction of numbers to get the Splitting point)
         AtomicInteger border = new AtomicInteger(1);//Splitting point its one by default
